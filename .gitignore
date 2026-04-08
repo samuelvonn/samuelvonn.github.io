@@ -1,0 +1,5 @@
+/.quarto
+/_site
+/_site/*.html
+/_site/*.js
+/_site/*.css
