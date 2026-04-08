@@ -1,7 +1,7 @@
 ---
-title: "Client Report - [Insert Project Title]"
+title: "Client Report - Finding Relationships in Baseball"
 subtitle: "Course DS 250"
-author: "[STUDENT NAME]"
+author: "Samuel Von"
 format:
   html:
     self-contained: true
@@ -24,5 +24,308 @@ execute:
   warning: false
     
 ---
+Here is a **clean 2–3 sentence elevator pitch focused only on results**:
 
-### Paste in a template
+## Elevator Pitch
+
+Analysis of the Lahman baseball database reveals that batting averages can appear extremely high when players have very few at-bats, but stabilize as the sample size increases. Salary comparisons also show that teams like the Yankees consistently maintain higher average payrolls than competitors such as the Red Sox, reflecting long-term investment in player talent. Additionally, career longevity analysis highlights how rare extended careers are, with only a small number of players competing at the professional level for more than 25–30 years.
+
+
+```{python}
+import pandas as pd 
+import numpy as np
+import sqlite3
+from lets_plot import *
+
+LetsPlot.setup_html(isolated_frame=True)
+sqlite_file = 'lahmansbaseballdb.sqlite'
+con = sqlite3.connect(sqlite_file)
+
+q = '''
+SELECT *
+FROM Batting
+LIMIT 2
+'''
+qr = pd.read_sql_query(q, con)
+qr
+
+```
+
+
+```{python}
+# Learn morea about Code Cells: https://quarto.org/docs/reference/cells/cells-jupyter.html
+
+# Include and execute your code here
+sqlite_file = 'lahmansbaseballdb.sqlite'
+# this file must be in the same location as your .qmd or .py file
+con = sqlite3.connect(sqlite_file)
+q = '''
+SELECT *
+FROM Batting
+WHERE playerID = 'addybo01'
+'''
+qr = pd.read_sql_query(q, con)
+qr
+```
+
+## QUESTION|TASK 1
+
+__Write an SQL query to create a new dataframe about baseball players who attended BYU-Idaho. The new table should contain five columns: playerID, schoolID, salary, and the yearID/teamID associated with each salary. Order the table by salary (highest to lowest) and print out the table in your report.__  
+
+The highest salary by a player who attended byui is Lindsman. Over the course of several years, their salary increased from 380,000$ to 4,000,000$. They are also changed teams constantly, which could explain the increase in salary. The other player Stephga, follows a similar trend, with salary increasing over the years.
+```{python}
+# Include and execute your code here
+#query for BYU-Idaho players
+q = """SELECT s.playerID,c.schoolID,s.salary,s.yearID,s.teamID 
+FROM CollegePlaying c 
+JOIN Salaries s ON c.playerID = s.playerID 
+WHERE c.schoolID = 'idbyuid' ORDER BY s.salary DESC
+"""
+results = pd.read_sql_query(q, con)
+results
+
+```
+
+
+## QUESTION|TASK 2
+
+__This three-part question requires you to calculate batting average (number of hits divided by the number of at-bats)__  
+    a. Write an SQL query that provides playerID, yearID, and batting average for players with at least 1 at bat that year. Sort the table from highest batting average to lowest, and then by playerid alphabetically. Show the top 5 results in your report.  
+    a. Use the same query as above, but only include players with at least 10 at bats that year. Print the top 5 results.  
+    a. Now calculate the batting average for players over their entire careers (all years combined). Only include players with at least 100 at bats, and print the top 5 results.  
+
+In the first table, several players have a perfect batting average of 1.000, meaning they got a hit in every at-bat. However, these results are not very meaningful because the players likely had only one or two at-bats. Very small sample sizes can produce extreme batting averages that do not reflect true performance.
+
+In the second table, the batting averages are lower but still quite high. These values are more realistic than the first table because players had more opportunities at the plate, but the sample sizes are still relatively small.
+
+The third table shows career batting averages for players with at least 100 at-bats, which provides the most reliable measure of performance. These results demonstrate that batting averages become more meaningful as the number of at-bats increases because larger sample sizes reduce the impact of random variation.
+
+```{python}
+# Include and execute your code here
+q1 = """SELECT playerID, yearID,ROUND(CAST(H AS FLOAT) / AB, 3) AS batting_average
+FROM Batting
+WHERE AB >= 1
+ORDER BY batting_average DESC, playerID ASC
+LIMIT 5"""
+top5_min1 = pd.read_sql_query(q1, con)
+top5_min1
+
+```
+
+```{python}
+# Include and execute your code here
+#Batting average with at least 10 at-bats
+
+q2 = """
+SELECT 
+    playerID,
+    yearID,
+    CAST(H AS FLOAT) / AB AS batting_average
+FROM Batting
+WHERE AB >= 10
+ORDER BY batting_average DESC, playerID ASC
+LIMIT 5
+"""
+
+batting10 = pd.read_sql_query(q2, con)
+batting10
+
+```
+
+```{python}
+# Include and execute your code here
+# Career batting averages with at least 100 at-bats
+
+q3 = """
+SELECT 
+    playerID,
+    CAST(SUM(H) AS FLOAT) / SUM(AB) AS batting_average
+FROM Batting
+GROUP BY playerID
+HAVING SUM(AB) >= 100
+ORDER BY batting_average DESC
+LIMIT 5
+"""
+
+career_batting = pd.read_sql_query(q3, con)
+career_batting
+
+```
+
+
+## QUESTION|TASK 3
+
+__Pick any two baseball teams and compare them using a metric of your choice (average salary, home runs, number of wins, etc). Write an SQL query to get the data you need, then make a graph using Lets-Plot to visualize the comparison. What do you learn?__
+
+I compared the average team salary per year between the New York Yankees (NYA) and the Boston Red Sox (BOS). Average salary was chosen because it reflects how much teams invest in players and allows comparison across multiple seasons. The Yankees generally show higher average salaries than the Red Sox, which suggests that the Yankees historically spend more on players. However, both teams show similar salary trends over time, increasing significantly after the 1990s as baseball revenues grew.
+
+```{python}
+# Include and execute your code here
+#salary comparison between Yankees and Red Sox
+q4 = """
+SELECT teamID,yearID, AVG(salary) AS avg_salary
+FROM Salaries
+WHERE teamID IN ('NYA','BOS')
+GROUP BY teamID, yearID
+ORDER BY yearID"""
+
+salary_compare = pd.read_sql_query(q4, con)
+salary_compare
+#Graph
+ggplot(salary_compare, aes(x='yearID', y='avg_salary', color='teamID')) + \
+    geom_line() + \
+    labs(
+        title="Average Salary Comparison: Yankees vs Red Sox",
+        x="Year",
+        y="Average Salary"
+    )
+```
+
+---
+
+## STRETCH QUESTION|TASK 1
+
+__Advanced Salary Distribution by Position (with Case Statement):__  
+
+    * Write an SQL query that provides a summary table showing the average salary for each position (e.g., pitcher, catcher, outfielder). Position information can be found in the fielding table in the POS column. 
+    
+        Include the following columns:
+
+        * position
+        * average_salary
+        * total_players
+        * highest_salary  
+
+    * The highest_salary column should display the highest salary ever earned by a player in that position. 
+
+    * Additionally, create a new column called salary_category using a case statement:  
+
+        * If the average salary is above $3 million, categorize it as “High Salary.”
+        * If the average salary is between $2 million and $3 million, categorize it as “Medium Salary.”
+        * Otherwise, categorize it as “Low Salary.”  
+
+    * Order the table by average salary in descending order.
+
+    **Hint:** Beware, it is common for a player to play multiple positions in a single year. For this analysis, each player’s salary should only be counted toward one position in a given year: the position at which they played the most games that year. This will likely require a (sub-query)[https://docs.data.world/documentation/sql/concepts/advanced/WITH.html].
+
+    
+The results show that first basemen (1B) have the highest average salary at about $3.33 million, placing them in the High Salary category. This suggests that first basemen are often  are highly valued by teams. Outfielders (OF) and third basemen (3B) fall into the Medium Salary category, with average salaries between $2 million and $3 million, indicating they are also important positions with relatively high pay.
+
+The remaining positions fall into the Low Salary category with average salaries below $2 million. Although pitchers have the largest number of players (2556 total), their average salary is lower because many pitchers earn smaller salaries early in their careers. Catchers have the lowest average salary overall at about $1.43 million. Overall, the results show that offensive positions tend to have higher salaries on average than defensive positions
+
+```{python}
+# Include and execute your code here
+# Salary distribution by position 
+
+q5 = """WITH primary_position AS ( SELECT playerID, yearID, POS, MAX(G) AS max_games
+    FROM Fielding
+    GROUP BY playerID, yearID),
+
+player_position AS (SELECT f.playerID, f.yearID, f.POS
+    FROM Fielding f
+    JOIN primary_position p
+      ON f.playerID = p.playerID
+     AND f.yearID = p.yearID
+     AND f.G = p.max_games)
+
+SELECT  pp.POS AS position,
+    ROUND(AVG(s.salary),2) AS average_salary,
+    COUNT(DISTINCT pp.playerID) AS total_players,
+    MAX(s.salary) AS highest_salary,
+
+    CASE
+        WHEN AVG(s.salary) > 3000000 THEN 'High Salary'
+        WHEN AVG(s.salary) BETWEEN 2000000 AND 3000000 THEN 'Medium Salary'
+        ELSE 'Low Salary'
+    END AS salary_category
+
+FROM player_position pp
+JOIN Salaries s
+    ON pp.playerID = s.playerID
+   AND pp.yearID = s.yearID
+
+GROUP BY pp.POS
+ORDER BY average_salary DESC
+"""
+
+position_salary = pd.read_sql_query(q5, con)
+position_salary
+
+```
+
+
+## STRETCH QUESTION|TASK 2
+
+__Advanced Career Longevity and Performance (with Subqueries):__
+
+    * Calculate the average career length (in years) for players who have played at least **10 games**. Then, identify the top 10 players with the longest careers (based on the number of years they played). Include their: 
+
+        * playerID
+        * first_name
+        * last_name
+        * career_length
+
+    * The career_length should be calculated as the difference between the maximum and minimum yearID for each player.  
+
+The results identify the players with the longest careers in Major League Baseball history.The longest career belongs to Nick Altrock, who played across 35 years, followed by Jim O'Rourke with 32 years and Minnie Miñoso with 31 years. Several other players, including Nolan Ryan, had careers lasting 27 years, which is far longer than a typical professional baseball career. No career length goes over 40 years, which makes sense given aging can reduce physical capabilities. Overall, the results show that extremely long careers are rare and represent unusual cases of sustained performance in professional baseball.
+
+```{python}
+# Include and execute your code here
+#Average career length (players with at least 10 games)
+
+q6 = """
+WITH player_careers AS (
+    SELECT 
+        playerID,
+        MIN(yearID) AS first_year,
+        MAX(yearID) AS last_year,
+        MAX(yearID) - MIN(yearID) AS career_length,
+        SUM(G_all) AS total_games
+    FROM Appearances
+    GROUP BY playerID
+)
+
+SELECT 
+    AVG(career_length) AS average_career_length
+FROM player_careers
+WHERE total_games >= 10
+"""
+
+avg_career = pd.read_sql_query(q6, con)
+avg_career
+#Longest careers
+q7 = """
+WITH player_careers AS (
+    SELECT 
+        playerID,
+        MIN(yearID) AS first_year,
+        MAX(yearID) AS last_year,
+        MAX(yearID) - MIN(yearID) AS career_length,
+        SUM(G_all) AS total_games
+    FROM Appearances
+    GROUP BY playerID
+)
+
+SELECT
+    pc.playerID,
+    p.nameFirst AS first_name,
+    p.nameLast AS last_name,
+    pc.career_length
+
+FROM player_careers pc
+JOIN People p
+ON pc.playerID = p.playerID
+
+WHERE pc.total_games >= 10
+
+ORDER BY pc.career_length DESC
+LIMIT 10
+"""
+
+longest_careers = pd.read_sql_query(q7, con)
+longest_careers
+
+```
+
+---
+

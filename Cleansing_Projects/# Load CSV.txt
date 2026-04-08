@@ -1,0 +1,58 @@
+# Load CSV
+df = pd.read_csv(r"C:\Users\sam\Documents\pythonsave\names_year.csv")
+
+#Filters for Ann
+ann_data = df[df['name'] == 'Ann']
+
+#plot code
+fig = px.line(
+    ann_data,
+    x='year',
+    y=['CO','AZ'],             
+    labels={'value':'Count of Ann','year':'Year'},
+    title='History of Ann in Colorado (blue) and Arizona (orange)'
+)
+#adds line colors
+fig.update_traces(selector=dict(name='CO'), line=dict(color='blue'))
+fig.update_traces(selector=dict(name='AZ'), line=dict(color='orange'))
+```
+
+import pandas as pd
+import numpy as np
+
+# Original data
+problem = pd.DataFrame({
+    "problem": ['N/A', 15, 22, 45, 31, -999, 21, 2, 0, 0, 0, 'broken',19, 19, 36, 27, 0, np.nan, 0, 33, 42, -999]})
+
+#Convert to numeric to make invalid entries nan
+problem['problem'] = pd.to_numeric(problem['problem'], errors='coerce')
+
+#treat -999 as missing
+problem['problem'] = problem['problem'].replace(-999, np.nan)
+
+#remove all NaN values
+cleaned = problem['problem'].dropna()
+
+#Calculate standard deviation and round to 2 decimal places
+std_dev_rounded = round(cleaned.std(), 2)
+
+std_dev_rounded
+
+import pandas as pd
+import plotly.express as px
+
+#Load data
+df = pd.read_csv(r"C:\Users\sam\Documents\pythonsave\dwellings_ml.csv")
+
+#filter for houses with 1 or 2 stories
+df_filtered = df[df['stories'].isin([1, 2])]
+
+#Create pivot table rows is stories, columns is nocars (number of cars), values is counts
+pivot_table = df_filtered.pivot_table(
+    index='stories',
+    columns='nocars',
+    aggfunc='size',
+    fill_value=0
+)
+
+print(pivot_table)

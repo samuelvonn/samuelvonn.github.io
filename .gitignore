@@ -3,3 +3,5 @@
 /_site/*.html
 /_site/*.js
 /_site/*.css
+/.quarto/
+**/*.quarto_ipynb

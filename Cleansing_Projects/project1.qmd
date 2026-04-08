@@ -1,7 +1,7 @@
 ---
-title: "Client Report - [Insert Project Title]"
+title: "Client Report - What's in a Name?"
 subtitle: "Course DS 250"
-author: "[STUDENT NAME]"
+author: "Samuel Von Niederhausern"
 format:
   html:
     self-contained: true
@@ -25,4 +25,189 @@ execute:
     
 ---
 
-### Paste in a template
+```{python}
+import pandas as pd
+import numpy as np
+from lets_plot import *
+
+LetsPlot.setup_html(isolated_frame=True)
+```
+
+
+## Project Notes
+
+__For Project 1 the answer to each question should include a chart **and** a written response. The years labels on your charts should not include a comma. At least **two** of your charts must include reference marks.__  
+
+```{python}
+# Learn morea about Code Cells: https://quarto.org/docs/reference/cells/cells-jupyter.html
+
+# Include and execute your code here
+df = pd.read_csv("names_year.csv")
+
+```
+
+## QUESTION|TASK 1
+
+__How does your name at your birth year compare to its use historically?__
+
+The name Samuel has been popular for many decades, but its usage increased noticeably in the late 1990s and early 2000s. Around my birth year of 2005, Samuel was near a modern peak. Afterwards there is a general downwards trend in usage. 
+
+```{python}
+# Include and execute your code here
+# Selects for the name Samuel
+samuel = df[df['name'] == 'Samuel']
+birthyear = 2005
+
+samuel = df[df['name'] == 'Samuel']
+
+#Plot code
+(
+    ggplot(samuel, aes(x='year', y='Total')) +
+    geom_line() +
+    geom_vline(xintercept=2005, linetype='dashed') +
+    labs(
+        title='Historical use of the Name Samuel',
+        subtitle='Dashed line indicates birth year (2005)',
+        x='Year',
+        y='Number of People Named Samuel'
+    )
+)
+
+
+```
+
+
+## QUESTION|TASK 2
+
+__If you talked to someone named Brittany on the phone, what is your guess of his or her age? What ages would you not guess?__
+
+The name Brittany peaked in popularity around 1990 and declined steadily afterward. Because of this trend, if I spoke to someone named Brittany, I would guess they are in their mid-30s. I would not expect a child or teenager to have this name today since it has been uncommon in recent years. I also would not guess an elderly age, since the name was rarer before the 1970s.
+
+```{python}
+# Include and execute your code here
+brittany = df[df['name'] == 'Brittany']
+
+#plot code
+(
+    ggplot(brittany, aes(x='year', y='Total')) +
+    geom_line() +
+    geom_vline(linetype='dashed') +
+    labs(
+        title='Historical Usage of the Name Brittany',
+        subtitle='Popularity',
+        x='Year',
+        y='Number of People Born Named Brittany'
+    )
+)
+
+```
+
+
+## QUESTION|TASK 3
+
+__Mary, Martha, Peter, and Paul are all Christian names. From 1920 - 2000, compare the name usage of each of the four names in a single chart. What trends do you notice?__
+
+Mary was the most popular of the four names. Mary shows a strong decline from the 1950s onwards after being extremely popular early in the century. Martha remains relatively uncommon throughout the entire period, while Peter and Paul show more stable but moderate usage. Overall, traditional Christian names lost popularity during the late 20th century. Female Christian names were more popular but declined rapidly in use. Male Christian names declined more slowly and remained more consistent.
+
+```{python}
+#Include and execute your code here
+#Filtesr for the names
+names = ['Mary', 'Martha', 'Peter', 'Paul']
+christian = df[df['name'].isin(names)]
+
+#limit years to 1920–2000
+christian = christian[(christian['year'] >= 1920) & (christian['year'] <= 2000)]
+
+(
+    ggplot(christian, aes(x='year', y='Total', color='name')) +
+    geom_line() +
+    labs(
+        title='Use of christian names from 1920 to 2000)',
+        x='Year',
+        y='Number of babies born'
+    )
+)
+
+```
+
+
+
+## QUESTION|TASK 4
+
+__Think of a unique name from a famous movie. Plot the usage of that name and see how changes line up with the movie release. Does it look like the movie had an effect on usage?__  
+
+The name Luke increases noticeably after the release of Star Wars in 1977. This rise suggests the movie likely influenced parent's naming choices. Before the movie’s release, the name was much less common, but usage climbed rapidly afterward. This pattern supports the idea that popular films can have a strong effect on baby name trends.
+
+```{python}
+# Include and execute your code here
+luke = df[df['name'] == 'Luke']
+
+#plot code
+(
+    ggplot(luke, aes(x='year', y='Total')) +
+    geom_line() +
+    geom_vline(xintercept=1977, linetype ='dashed') +
+    labs(
+        title='Historical Usage of the Name Luke',
+        subtitle='Popularity',
+        x='Year',
+        y='Number of People Born Named Luke'
+    )
+)
+
+```
+
+
+
+---
+
+
+## STRETCH QUESTION|TASK 1
+
+__Reproduce the chart Elliot using the data from the `names_year.csv` file.__ 
+
+The name Elliot shows a clear increase in popularity following the original 1982 release of E.T.. The name remains elevated during later re-releases in 1985 and 2002, showing continued cultural influence. While popularity fluctuates, the spikes align closely with major movie events. This shows that E.T. likely had a lasting impact on the usage of the name Elliot.
+
+```{python}
+# Include and execute your code here
+# Filter data for the name Elliot
+elliot = df[df['name'] == 'Elliot']
+
+max_y = elliot['Total'].max()
+
+(
+    ggplot(elliot, aes(x='year', y='Total', color='name')) + 
+    geom_line(size=1) +
+    
+    scale_color_manual(values={"Elliot": "blue"}) + 
+    geom_vline(xintercept=1982, linetype='dashed', color='red') +
+    geom_vline(xintercept=1985, linetype='dotted', color='red') +
+    geom_vline(xintercept=2002, linetype='dotdash', color='red') +
+    geom_text(x=1982, y=max_y, label='E.T Release', angle=0, hjust=1, size=4,color = 'black') +
+    geom_text(x=1985, y=max_y, label='Second Release', angle=0, hjust=0, size=4,color = 'black') +
+    geom_text(x=2002, y=max_y, label='Third Release', angle=0, hjust=0, size=4, color = 'black') +
+    labs(
+        title='Elliot... What?',
+        x='Year',
+        y='Total',
+        color='Name'  #legend title
+    )
+    +
+    theme(
+        panel_background=element_rect(fill='rgba(228, 249, 255, 0.55)'),
+        panel_grid_major=element_line(color='white'),
+        panel_grid_minor=element_line(color='white'),
+        text=element_text(color='black')
+    )
+)
+
+
+
+
+
+
+
+```
+
+
+---
