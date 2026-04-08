@@ -1,10 +1,16 @@
 ---
-title: "about me"
+title: "About me"
 subtitle: "my data science portfolio"
 # use quarto markdown to 
 ---
 
-# Title 1 Header
-## Title 2 Header
+# General Information
+**Major:** Geology and ArcGIS   
+- **Skills:** Python, R, SQL, ArcGIS, Machine Learning  
+- **Experience:** Data science projects, tutoring, and teaching assistant work  
+- **Interests:** Environmental data, geospatial analysis, predictive modeling  
+
+## Goals
+I am currently seeking internship opportunities in geology, analytics, or geospatial fields where I can apply my technical skills and continue developing professionally.
 
 [MarkDown Basics](https://quarto.org/docs/authoring/markdown-basics.html#links-images)
