@@ -1,90 +1,52 @@
 ---
 layout: cv
-title: Isaac Newtons's CV
+title: Samuel Von's Resume
 ---
-# Isaac Newton
-Physicist, Mathematician, Cambridge professor.
+# Samuel Von Niederhausern
 
-<div id="webaddress">
-<a href="isaac@applesdofall.org">isaac@applesdofall.org</a>
-| <a href="http://en.wikipedia.org/wiki/Isaac_Newton">My wikipedia page</a>
-<!-- | <a href="https://yourusername.github.io/datascience_portfolio/gh-pages/resume.pdf">Download PDF</a> -->
-| <a href="https://github.com/byuidatascience/datascience_portfolio/blob/gh-pages/resume.pdf">Download PDF</a>
-</div>
-
-
-## Currently
-
-Standing on the shoulders of giants
-
-### Specialized in
-
-Laws of motion, gravitation, minting coins, disliking [Robert Hooke](http://en.wikipedia.org/wiki/Robert_Hooke)
-
-
-### Research interests
-
-Cooling, power series, optics, alchemy, planetary motions, apples.
-
+**City:** Rosenberg, TX | **Phone:** 1(817) 538-6243 | **Email:** sam.von@outlook.com
 
 ## Education
+**Brigham Young University Idaho**, Rexburg, Idaho  
+Bachelor of Science, Major in Geology, Certificate in GIS, GPA: 3.98  
+Expected graduation: Spring 2026
 
-`1654-1660`
-__The King's School, Grantham.__
+## Work Experience
+**Teaching Assistant**, BYUI — Rexburg, ID  
+Jan 2024 – Present  
+- Helped students with geology concepts such as Sedimentology and Stratigraphy  
+- Maintained documentation of student grades  
+- Assisted with field trips
 
-`June 1661 - now`
-__Trinity College, Cambridge__
+**Tutor**, BYUI — Rexburg, ID  
+Jan 2025 – Dec 2025  
+- Created learning plans for students  
+- Taught kinematics, physical geology, energy, circular motion
 
-- Sizar
+## Significant Coursework
+- Historical Geology  
+- Structure  
+- Sedimentology and Stratigraphy  
+- Igneous and Metamorphic Petrology  
+- Geochemistry  
+- GIS for STEM  
+- Environmental Geology  
+- Remote Sensing
 
-`1667 - death`
-__Trinity College, Cambridge__
+## Extra Curricular Activities
+**Logistics Helper**, Geology Society — Rexburg, ID  
+Sep 2024 – Present  
+- Organized events, recruited new members, assisted in planning 7 events  
 
-- Fellow
+**Student Research**, Rexburg, ID  
+Jan 2025 – Apr 2025  
+- Participated in research on Thin Films  
+- Gained experience with XRD machine and vacuum chamber
 
-
-
-## Awards
-
-`2012`
-President, *Royal Society*, London, UK
-
-Associate, *French Academy of Science*, Paris, France
-
-
-
-## Publications
-
-<!-- A list is also available [online](http://scholar.google.co.uk/citations?user=LTOTl0YAAAAJ) -->
-
-### Journals
-
-`1669`
-Newton Sir I, De analysi per æquationes numero terminorum infinitas. 
-
-`1669`
-Lectiones opticæ.
-
-etc. etc. etc.
-
-### Patents
-
-`2012`
-Infinitesimal calculus for solutions to physics problems, [SMBC](http://www.techdirt.com/articles/20121011/09312820678/if-patents-had-been-around-time-newton.shtml) patent 001
-
-
-## Occupation
-
-`1600`
-__Royal Mint__, London
-
-- Warden
-- Minted coins
-
-`1600`
-__Lucasian professor of Mathematics__, Cambridge University
-
-
+## Significant Projects
+- Cross-section of Canadian Fold and Thrust System  
+- Mapping Stratigraphy of Richardson Amphitheater, UT  
+- Statistical analysis of hazardous uranium mines in Navajo Nation using ArcGIS
 
 <!-- ### Footer
 
